@@ -13,6 +13,12 @@ body {
     margin-bottom: 5px;
 }
 
+.link-block a[disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+}
+
 .dnerf {
   font-variant: small-caps;
 }
