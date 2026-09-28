@@ -148,42 +148,11 @@ body {
 }
 
 .teaser-tagline {
-  --mx: 50%;
-  --my: 50%;
   font-size: 1.4rem;
-  font-weight: 600;
+  font-weight: normal;
+  font-style: italic;
   margin-top: 1.5rem;
-  color: #7c3aed; /* fallback for browsers without background-clip: text */
-}
-
-@supports ((-webkit-background-clip: text) or (background-clip: text)) {
-  .teaser-tagline {
-    background-image:
-      radial-gradient(circle, #ffffff 0%, #d8b4fe 35%, transparent 70%),
-      radial-gradient(circle, #a855f7 0%, transparent 65%),
-      radial-gradient(circle, #ffffff 0%, transparent 60%),
-      linear-gradient(135deg, #4c1d95, #7c3aed 45%, #c084fc 70%, #4c1d95);
-    background-size: 55% 55%, 70% 70%, 55% 55%, 200% 200%;
-    background-repeat: no-repeat;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-    animation: tagline-lava 16s ease-in-out infinite;
-  }
-}
-
-@keyframes tagline-lava {
-  0%   { background-position: var(--mx) var(--my), 20% 30%, 75% 70%, 0% 50%; }
-  25%  { background-position: var(--mx) var(--my), 65% 15%, 30% 65%, 50% 100%; }
-  50%  { background-position: var(--mx) var(--my), 80% 65%, 15% 20%, 100% 50%; }
-  75%  { background-position: var(--mx) var(--my), 35% 80%, 60% 30%, 50% 0%; }
-  100% { background-position: var(--mx) var(--my), 20% 30%, 75% 70%, 0% 50%; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .teaser-tagline {
-    animation: none;
-  }
+  color: #aaaaaa;
 }
 
 .fig-caption {

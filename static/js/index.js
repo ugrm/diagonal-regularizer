@@ -11,23 +11,4 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
   }
-
-  // Let the tagline's gradient blob follow the mouse across the page.
-  var taglines = document.querySelectorAll(".teaser-tagline");
-  if (taglines.length) {
-    var raf = null;
-    var mx = 50, my = 50;
-    window.addEventListener("mousemove", function (e) {
-      mx = (e.clientX / window.innerWidth) * 100;
-      my = (e.clientY / window.innerHeight) * 100;
-      if (raf) return;
-      raf = requestAnimationFrame(function () {
-        raf = null;
-        taglines.forEach(function (el) {
-          el.style.setProperty("--mx", mx + "%");
-          el.style.setProperty("--my", my + "%");
-        });
-      });
-    });
-  }
 });
