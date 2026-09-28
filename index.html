@@ -168,13 +168,14 @@
     <h2 class="title is-3 has-text-centered">Why it works</h2>
     <p class="content has-text-centered">The discarded modes act as white noise, for three reasons.</p>
 
-    <div class="columns is-vcentered why-step">
-      <div class="column is-6">
-        <div class="mosaic-frame" data-dock-mosaic data-layout="./static/mosaic/layout.json">
-          <canvas></canvas>
-        </div>
-        <p class="fig-caption has-text-centered">One room has 392 modes below 1&nbsp;kHz; we keep the first 50. Hover (or tap, on touch) to magnify.</p>
+    <div class="why-step">
+      <div class="mosaic-frame" data-dock-mosaic data-layout="./static/mosaic/layout.json">
+        <canvas></canvas>
       </div>
+      <p class="fig-caption has-text-centered">One room has 392 modes below 1&nbsp;kHz; we keep the first 50. Hover (or tap, on touch) to magnify.</p>
+    </div>
+
+    <div class="columns is-vcentered why-step">
       <div class="column is-6">
         <figure class="image">
           <img src="./static/images/fig/05_berry.webp"
@@ -182,10 +183,7 @@
         </figure>
         <p class="fig-caption has-text-centered">High modes look like random interference patterns — but a plain rectangle produces the same mode-amplitude statistics, so room shape barely matters.</p>
       </div>
-    </div>
-
-    <div class="columns is-centered why-step">
-      <div class="column is-7">
+      <div class="column is-6">
         <figure class="image">
           <img src="./static/images/fig/06_white_noise.webp"
                alt="A discarded-mode field and its near-diagonal cross-microphone covariance matrix.">
@@ -233,13 +231,11 @@
     <h2 class="title">BibTeX</h2>
     <div class="bibtex-block">
       <button class="button is-small bibtex-copy" type="button">copy</button>
-      <pre><code id="bibtex-text">@misc{han2026diagonal,
-      title={Why Learning Rediscovers the Closed-Form Diagonal Regularizer},
-      author={Jeahn Han and Pyojin Kim},
-      year={2026},
-      eprint={2609.09656},
-      archivePrefix={arXiv},
-      primaryClass={stat.ML}
+      <pre><code id="bibtex-text">@article{han2026learning,
+  title={Why Learning Rediscovers the Closed-Form Diagonal Regularizer},
+  author={Han, Jeahn and Kim, Pyojin},
+  journal={arXiv preprint arXiv:2609.09656},
+  year={2026}
 }</code></pre>
     </div>
   </div>
