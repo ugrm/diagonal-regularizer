@@ -147,6 +147,58 @@ body {
   margin: 0 !important;
 }
 
+.teaser-tagline {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+}
+
+.fig-caption {
+  color: #666;
+  font-size: 0.95rem;
+  margin-top: 0.75rem;
+}
+
+.formula {
+  font-style: italic;
+  font-size: 1.1em;
+}
+
+.why-step {
+  margin-bottom: 3rem;
+}
+
+.mosaic-frame {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #eee;
+  cursor: crosshair;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.mosaic-frame.is-ready {
+  opacity: 1;
+}
+
+.mosaic-frame canvas {
+  display: block;
+}
+
+.bibtex-block {
+  position: relative;
+}
+
+.bibtex-copy {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+}
+
 #interpolation-image-wrapper {
   width: 100%;
 }

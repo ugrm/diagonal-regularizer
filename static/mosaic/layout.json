@@ -1,0 +1,7 @@
+{
+  "count": 392,
+  "cols": 28,
+  "kept": 50,
+  "tile_px": 220,
+  "pattern": "tiles/mode_{:03d}.webp"
+}

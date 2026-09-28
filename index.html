@@ -9,18 +9,14 @@
   <title>Why Learning Rediscovers the Closed-Form Diagonal Regularizer</title>
 
   <link rel="stylesheet" href="./static/css/bulma.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
-  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script src="./static/js/bulma-carousel.min.js"></script>
-  <script src="./static/js/bulma-slider.min.js"></script>
-  <script src="./static/js/index.js"></script>
+  <script defer src="./static/js/dock-mosaic.js"></script>
+  <script defer src="./static/js/index.js"></script>
 </head>
 <body>
 
@@ -90,9 +86,21 @@
 </section>
 
 
-<section class="section">
+<!-- Teaser -->
+<section class="section pt-0">
   <div class="container is-max-desktop">
-    <!-- Abstract. -->
+    <figure class="image">
+      <img src="./static/images/fig/01_sound_field_and_mics.webp"
+           alt="A room's sound field, early and late after a clap, sampled at eight microphones.">
+    </figure>
+    <p class="teaser-tagline has-text-centered">Learned diagonal penalties can't beat a closed form set by the prior.</p>
+  </div>
+</section>
+
+
+<!-- Abstract -->
+<section class="section pt-0">
+  <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
         <h2 class="title is-3">Abstract</h2>
@@ -103,7 +111,119 @@
         </div>
       </div>
     </div>
-    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<!-- The problem -->
+<section class="section pt-0">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">The problem</h2>
+        <p class="content">
+          We reconstruct a room's sound field from a few microphones. That needs regularization.
+          Which penalty shape should we use — and must it be learned for every room?
+        </p>
+      </div>
+    </div>
+    <figure class="image">
+      <img src="./static/images/fig/02_sound_field_and_time.webp"
+           alt="A clap's sound field at 2, 7, 17 and 48 milliseconds, becoming increasingly unstructured over time.">
+      <figcaption class="fig-caption has-text-centered">
+        A clap starts as a few clean wavefronts (2 ms) and by 48 ms looks like unstructured static — the field becomes effectively random.
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- Method -->
+<section class="section pt-0">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Method</h2>
+        <p class="content">
+          We estimate the first <em>K</em>&nbsp;=&nbsp;50 modes from 8 microphones, with a penalty
+          <span class="formula">Γ<sub>k</sub> ∝ λ<sub>k</sub><sup>|s|</sup></span>
+          set by the prior alone.
+        </p>
+      </div>
+    </div>
+    <figure class="image">
+      <img src="./static/images/fig/03_what_we_estimate.webp"
+           alt="The observed field decomposed into the first 50 kept modes and the remaining discarded modes.">
+      <figcaption class="fig-caption has-text-centered">
+        The observed field splits into the modes we keep (teal, <em>k</em>&nbsp;≤&nbsp;50) and the modes we discard (orange, <em>k</em>&nbsp;&gt;&nbsp;50).
+      </figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- Why it works -->
+<section class="section pt-0">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Why it works</h2>
+    <p class="content has-text-centered">The discarded modes act as white noise, for three reasons.</p>
+
+    <div class="columns is-vcentered why-step">
+      <div class="column is-6">
+        <div class="mosaic-frame" data-dock-mosaic data-layout="./static/mosaic/layout.json">
+          <canvas></canvas>
+        </div>
+        <p class="fig-caption has-text-centered">One room has 392 modes below 1&nbsp;kHz; we keep the first 50. Hover (or tap, on touch) to magnify.</p>
+      </div>
+      <div class="column is-6">
+        <figure class="image">
+          <img src="./static/images/fig/05_berry.webp"
+               alt="High modes of an irregular room, a rectangle, and a grid, with matching amplitude histograms.">
+        </figure>
+        <p class="fig-caption has-text-centered">High modes look like random interference patterns — but a plain rectangle produces the same mode-amplitude statistics, so room shape barely matters.</p>
+      </div>
+    </div>
+
+    <div class="columns is-centered why-step">
+      <div class="column is-7">
+        <figure class="image">
+          <img src="./static/images/fig/06_white_noise.webp"
+               alt="A discarded-mode field and its near-diagonal cross-microphone covariance matrix.">
+        </figure>
+        <p class="fig-caption has-text-centered">
+          The discarded modes reach every microphone as equal, unrelated noise — so the prior alone, not the room, sets the penalty.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Results -->
+<section class="section pt-0">
+  <div class="container is-max-desktop">
+    <h2 class="title is-3 has-text-centered">Results</h2>
+
+    <div class="columns is-vcentered">
+      <div class="column is-6">
+        <figure class="image">
+          <img src="./static/images/fig/07_flat_landscape.webp"
+               alt="Reconstruction error versus penalty exponent p, nearly flat across observation windows T.">
+        </figure>
+        <p class="fig-caption has-text-centered">
+          The error is nearly flat in the penalty exponent <em>p</em>. The closed form (<em>p</em>&nbsp;=&nbsp;|<em>s</em>|, red line) sits in that flat basin, costing 5.83% in the median room across observation windows <em>T</em>.
+        </p>
+      </div>
+      <div class="column is-6">
+        <figure class="image">
+          <img src="./static/images/fig/08_learning_rediscovers.webp"
+               alt="Three learned penalty shapes compared against the closed-form power law across mode index.">
+        </figure>
+        <p class="fig-caption has-text-centered">
+          Three learned penalties (M1, M2, M3) settle into shapes close to the closed form λ<sub>k</sub><sup>|s|</sup>, despite starting from different architectures.
+        </p>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -111,7 +231,17 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code></code></pre>
+    <div class="bibtex-block">
+      <button class="button is-small bibtex-copy" type="button">copy</button>
+      <pre><code id="bibtex-text">@misc{han2026diagonal,
+      title={Why Learning Rediscovers the Closed-Form Diagonal Regularizer},
+      author={Jeahn Han and Pyojin Kim},
+      year={2026},
+      eprint={2609.09656},
+      archivePrefix={arXiv},
+      primaryClass={stat.ML}
+}</code></pre>
+    </div>
   </div>
 </section>
 
