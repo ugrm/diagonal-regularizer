@@ -7,6 +7,7 @@
 (function () {
   const BASE = 0.86;   // rest tile size; pitch (tile + gap) is 1
   const GAPMIN = 0.06;  // smallest gap kept between tiles and to the frame
+  const EDGE_FALLOFF = 0.5; // pitch units over which the effect fades out beyond the tile area
 
   function initDockMosaic(root) {
     const canvas = root.querySelector("canvas");
@@ -71,14 +72,16 @@
       }
 
       let rng = rng0;
-      let pointer = null; // [x, y] in pitch units, or null = at rest
+      let pointer = null; // [x, y, strength] (pitch units, strength 0..1), or null = at rest
       let frozen = false;
 
-      // -- layout(): faithful port of Dock.layout / Dock.resolve --
-      function layout(px, py) {
-        const A = maxScale - 1;
+      // -- layout(): faithful port of Dock.layout / Dock.resolve, with the peak
+      // magnification M passed in so it can be faded out continuously (M = 1 is
+      // exactly the rest layout) --
+      function layout(px, py, M) {
+        const A = M - 1;
         const Rin = rng;
-        const hf = maxScale * BASE / 2 + GAPMIN;
+        const hf = M * BASE / 2 + GAPMIN;
         const qx = Math.min(Math.max(px, hf), cols - hf);
         const qy = Math.min(Math.max(py, hf), rows - hf);
         const Rs = 2.5 * Rin;
@@ -158,7 +161,7 @@
         ctx.fillStyle = "#ffffff";
         ctx.fillRect(0, 0, cssW, cssH);
 
-        if (pointer) layout(pointer[0], pointer[1]);
+        if (pointer) layout(pointer[0], pointer[1], 1 + pointer[2] * (maxScale - 1));
         else atRest();
 
         // sort by scale ascending so larger tiles draw last (on top)
@@ -185,14 +188,24 @@
         });
       }
 
-      function pointerFromEvent(clientX, clientY) {
+      // Pointer as [x, y, strength] in pitch units, or null over the padding. The
+      // mosaic reacts at full strength over the area the tiles cover, fades to
+      // nothing over EDGE_FALLOFF beyond it (steep, but continuous), and stays at
+      // rest further out.
+      function activePointer(clientX, clientY) {
         const rect = canvas.getBoundingClientRect();
-        return [(clientX - rect.left) / ppu, (clientY - rect.top) / ppu];
+        const x = (clientX - rect.left) / ppu;
+        const y = (clientY - rect.top) / ppu;
+        const dx = Math.max(margin - x, 0, x - (margin + gridCols));
+        const dy = Math.max(margin - y, 0, y - (margin + gridRows));
+        const d = Math.hypot(dx, dy);
+        if (d >= EDGE_FALLOFF) return null;
+        return [x, y, 0.5 * (1 + Math.cos((Math.PI * d) / EDGE_FALLOFF))];
       }
 
       canvas.addEventListener("mousemove", (e) => {
         if (frozen) return;
-        pointer = pointerFromEvent(e.clientX, e.clientY);
+        pointer = activePointer(e.clientX, e.clientY);
         requestDraw();
       });
       canvas.addEventListener("mouseleave", () => {
@@ -201,12 +214,13 @@
         requestDraw();
       });
       canvas.addEventListener("click", (e) => {
-        if (!frozen) {
-          pointer = pointerFromEvent(e.clientX, e.clientY);
-          frozen = true;
-        } else {
+        const p = activePointer(e.clientX, e.clientY);
+        if (frozen) {
           frozen = false;
-          pointer = pointerFromEvent(e.clientX, e.clientY);
+          pointer = p;
+        } else if (p && p[2] === 1) {
+          frozen = true;
+          pointer = p;
         }
         requestDraw();
       });
@@ -215,8 +229,14 @@
         (e) => {
           e.preventDefault(); // suppress the synthetic mouse/click that would follow
           const t = e.changedTouches[0];
-          pointer = pointerFromEvent(t.clientX, t.clientY);
-          frozen = !frozen;
+          const p = activePointer(t.clientX, t.clientY);
+          if (frozen) {
+            frozen = false;
+            pointer = p;
+          } else if (p && p[2] === 1) {
+            frozen = true;
+            pointer = p;
+          }
           requestDraw();
         },
         { passive: false }
