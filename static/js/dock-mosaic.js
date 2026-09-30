@@ -23,7 +23,7 @@
       const n = cfg.count;
       const cols = cfg.cols;
       const rows = Math.ceil(n / cols);
-      const maxScale = 4.0;
+      const maxScale = 6.0;
       const rng0 = 1.5;
 
       // rest centres, in pitch units
