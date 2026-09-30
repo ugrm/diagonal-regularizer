@@ -21,17 +21,24 @@
     // function declared below would hoist and shadow it for this whole scope.
     function setup(cfg) {
       const n = cfg.count;
-      const cols = cfg.cols;
-      const rows = Math.ceil(n / cols);
+      const gridCols = cfg.cols;
+      const gridRows = Math.ceil(n / gridCols);
+      // White padding around the grid so the most magnified tiles at corners and
+      // edges have room to spread. `cols`/`rows` below are the whole frame
+      // (grid + padding); the grid itself sits in the middle of it.
+      const margin = cfg.margin || 0;
+      const cols = gridCols + 2 * margin;
+      const rows = gridRows + 2 * margin;
       const maxScale = 6.0;
       const rng0 = 1.5;
+      root.style.aspectRatio = cols + " / " + rows;
 
       // rest centres, in pitch units
       const restX = new Float32Array(n);
       const restY = new Float32Array(n);
       for (let k = 0; k < n; k++) {
-        restX[k] = (k % cols) + 0.5;
-        restY[k] = Math.floor(k / cols) + 0.5;
+        restX[k] = (k % gridCols) + 0.5 + margin;
+        restY[k] = Math.floor(k / gridCols) + 0.5 + margin;
       }
 
       const curX = new Float32Array(n);

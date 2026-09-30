@@ -173,11 +173,9 @@ body {
 .mosaic-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 2 / 1;
-  border-radius: 8px;
+  aspect-ratio: 36 / 22; /* placeholder until JS sets it from layout.json: (28 + 2*margin) / (14 + 2*margin) */
   overflow: hidden;
   background: #fff;
-  border: 1px solid #eee;
   cursor: crosshair;
   opacity: 0;
   transition: opacity 0.3s ease;

@@ -3,5 +3,6 @@
   "cols": 28,
   "kept": 50,
   "tile_px": 220,
+  "margin": 4,
   "pattern": "tiles/mode_{:03d}.webp"
 }
