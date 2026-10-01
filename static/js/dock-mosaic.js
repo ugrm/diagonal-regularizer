@@ -224,23 +224,66 @@
         }
         requestDraw();
       });
+      // Touch: dragging a finger moves the magnification like a mouse. The
+      // magnified tile sits under the finger, so on lift the view is held where
+      // the finger left it (frozen); a tap with no movement toggles that hold,
+      // like a click does. Touches that start over the padding are left alone so
+      // the page can still scroll.
+      const TAP_SLOP_PX = 10;
+      let touchId = null;
+      let touchOrigin = null;
+      let touchMoved = false;
+      let heldAtStart = false;
+
+      function findTouch(list, id) {
+        for (let i = 0; i < list.length; i++) if (list[i].identifier === id) return list[i];
+        return null;
+      }
+
       canvas.addEventListener(
         "touchstart",
         (e) => {
-          e.preventDefault(); // suppress the synthetic mouse/click that would follow
+          if (touchId !== null) return; // already following a finger
           const t = e.changedTouches[0];
           const p = activePointer(t.clientX, t.clientY);
-          if (frozen) {
-            frozen = false;
-            pointer = p;
-          } else if (p && p[2] === 1) {
-            frozen = true;
-            pointer = p;
-          }
+          if (!p) return;
+          e.preventDefault(); // we own this gesture: no scroll, no synthetic mouse/click
+          touchId = t.identifier;
+          touchOrigin = [t.clientX, t.clientY];
+          touchMoved = false;
+          heldAtStart = frozen;
+          frozen = false;
+          pointer = p;
           requestDraw();
         },
         { passive: false }
       );
+      canvas.addEventListener(
+        "touchmove",
+        (e) => {
+          if (touchId === null) return;
+          const t = findTouch(e.changedTouches, touchId);
+          if (!t) return;
+          e.preventDefault();
+          if (!touchMoved && Math.hypot(t.clientX - touchOrigin[0], t.clientY - touchOrigin[1]) > TAP_SLOP_PX) {
+            touchMoved = true;
+          }
+          pointer = activePointer(t.clientX, t.clientY);
+          requestDraw();
+        },
+        { passive: false }
+      );
+      function endTouch(e, cancelled) {
+        if (touchId === null || !findTouch(e.changedTouches, touchId)) return;
+        touchId = null;
+        const tapOnHeld = !touchMoved && heldAtStart;
+        const holdable = !cancelled && !tapOnHeld && pointer && pointer[2] === 1;
+        frozen = !!holdable;
+        if (!holdable) pointer = null;
+        requestDraw();
+      }
+      canvas.addEventListener("touchend", (e) => endTouch(e, false));
+      canvas.addEventListener("touchcancel", (e) => endTouch(e, true));
 
       window.addEventListener("resize", resize);
       resize();
