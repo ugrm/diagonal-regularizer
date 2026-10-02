@@ -170,15 +170,37 @@ body {
   margin-bottom: 3rem;
 }
 
+.mosaic-step {
+  margin-bottom: 1.25rem;
+}
+
+.mosaic-step .fig-caption {
+  margin-top: 0.25rem;
+}
+
+/* Text sits above a magnified tile that spills over it, so it stays readable. */
+.mosaic-step .fig-caption,
+.mosaic-lead {
+  position: relative;
+  z-index: 2;
+}
+
+/* The box is the tile area plus the room magnified tiles need above and below it
+   ("spill" in the layout json), so zooming never covers the text around it. */
 .mosaic-frame {
   position: relative;
   width: 100%;
-  aspect-ratio: 36 / 22; /* placeholder until JS sets it from layout.json: (28 + 2*margin) / (14 + 2*margin) */
-  overflow: hidden;
-  background: #fff;
+  aspect-ratio: 36 / 20.6; /* placeholder until JS sets it from layout.json: (28 + 2*margin) / (14 + 2*spill) */
   cursor: crosshair;
   opacity: 0;
   transition: opacity 0.3s ease;
+}
+
+/* 33 grid-widths across (25 + 2*margin), so 1056px gives the same tile size as the full mosaic (36 across at 1152px) */
+.mosaic-frame--kept {
+  max-width: 1056px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .mosaic-frame.is-ready {
@@ -186,7 +208,10 @@ body {
 }
 
 .mosaic-frame canvas {
+  position: absolute;
+  left: 0;
   display: block;
+  pointer-events: none; /* the frame takes the pointer, so the spill-over never blocks the text under it */
   -webkit-tap-highlight-color: transparent;
   -webkit-touch-callout: none;
   -webkit-user-select: none;

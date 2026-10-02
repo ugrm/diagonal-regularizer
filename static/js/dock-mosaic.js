@@ -8,6 +8,11 @@
   const BASE = 0.86;   // rest tile size; pitch (tile + gap) is 1
   const GAPMIN = 0.06;  // smallest gap kept between tiles and to the frame
   const EDGE_FALLOFF = 0.5; // pitch units over which the effect fades out beyond the tile area
+  // How far magnified tiles reach beyond the grid, in pitch units (measured: 3.24 at
+  // the zoom set by maxScale below, for both grids). The layout box reserves this much
+  // above and below the tiles so the zoom never covers the text around it. It lives
+  // here, next to maxScale, because it depends on that zoom; re-measure if it changes.
+  const SPILL = 3.3;
 
   function initDockMosaic(root) {
     const canvas = root.querySelector("canvas");
@@ -32,7 +37,12 @@
       const rows = gridRows + 2 * margin;
       const maxScale = 6.0;
       const rng0 = 1.5;
-      root.style.aspectRatio = cols + " / " + rows;
+      // The layout box is the tile area plus SPILL above and below it, so neighbouring
+      // text is never covered. The canvas, which also carries the horizontal padding,
+      // is positioned inside it. The box must at least cover the EDGE_FALLOFF band the
+      // pointer reacts in, and can't be larger than the padding the canvas has.
+      const boxPad = Math.max(EDGE_FALLOFF, Math.min(SPILL, margin));
+      root.style.aspectRatio = cols + " / " + (gridRows + 2 * boxPad);
 
       // rest centres, in pitch units
       const restX = new Float32Array(n);
@@ -66,6 +76,7 @@
         const cssH = ppu * rows;
         canvas.style.width = cssW + "px";
         canvas.style.height = cssH + "px";
+        canvas.style.top = -(margin - boxPad) * ppu + "px";
         canvas.width = Math.round(cssW * dpr);
         canvas.height = Math.round(cssH * dpr);
         draw();
@@ -158,8 +169,6 @@
         ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
         const cssW = canvas.width / dpr, cssH = canvas.height / dpr;
         ctx.clearRect(0, 0, cssW, cssH);
-        ctx.fillStyle = "#ffffff";
-        ctx.fillRect(0, 0, cssW, cssH);
 
         if (pointer) layout(pointer[0], pointer[1], 1 + pointer[2] * (maxScale - 1));
         else atRest();
@@ -203,17 +212,17 @@
         return [x, y, 0.5 * (1 + Math.cos((Math.PI * d) / EDGE_FALLOFF))];
       }
 
-      canvas.addEventListener("mousemove", (e) => {
+      root.addEventListener("mousemove", (e) => {
         if (frozen) return;
         pointer = activePointer(e.clientX, e.clientY);
         requestDraw();
       });
-      canvas.addEventListener("mouseleave", () => {
+      root.addEventListener("mouseleave", () => {
         if (frozen) return;
         pointer = null;
         requestDraw();
       });
-      canvas.addEventListener("click", (e) => {
+      root.addEventListener("click", (e) => {
         const p = activePointer(e.clientX, e.clientY);
         if (frozen) {
           frozen = false;
@@ -240,7 +249,7 @@
         return null;
       }
 
-      canvas.addEventListener(
+      root.addEventListener(
         "touchstart",
         (e) => {
           if (touchId !== null) return; // already following a finger
@@ -258,7 +267,7 @@
         },
         { passive: false }
       );
-      canvas.addEventListener(
+      root.addEventListener(
         "touchmove",
         (e) => {
           if (touchId === null) return;
@@ -282,8 +291,8 @@
         if (!holdable) pointer = null;
         requestDraw();
       }
-      canvas.addEventListener("touchend", (e) => endTouch(e, false));
-      canvas.addEventListener("touchcancel", (e) => endTouch(e, true));
+      root.addEventListener("touchend", (e) => endTouch(e, false));
+      root.addEventListener("touchcancel", (e) => endTouch(e, true));
 
       window.addEventListener("resize", resize);
       resize();

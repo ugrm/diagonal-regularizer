@@ -1,0 +1,8 @@
+{
+  "count": 50,
+  "cols": 25,
+  "kept": 50,
+  "tile_px": 220,
+  "margin": 4,
+  "pattern": "tiles/mode_{:03d}.webp"
+}

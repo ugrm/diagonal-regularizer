@@ -12,11 +12,14 @@
   <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
+  <!-- ?v= is a short hash of the file (also on the data-layout configs further down): update it whenever that
+       file changes, so browsers never pair a new stylesheet or script with an old copy of another file
+       (GitHub Pages lets browsers cache assets for 10 minutes). -->
+  <link rel="stylesheet" href="./static/css/index.css?v=19e62aa7">
 
   <script defer src="./static/js/fontawesome.all.min.js"></script>
-  <script defer src="./static/js/dock-mosaic.js"></script>
-  <script defer src="./static/js/index.js"></script>
+  <script defer src="./static/js/dock-mosaic.js?v=d814c753"></script>
+  <script defer src="./static/js/index.js?v=43f98d76"></script>
 </head>
 <body>
 
@@ -166,13 +169,20 @@
 <section class="section pt-0">
   <div class="container is-max-desktop">
     <h2 class="title is-3 has-text-centered">Why it works</h2>
-    <p class="content has-text-centered">The discarded modes act as white noise:</p>
+    <p class="content has-text-centered mb-2 mosaic-lead">The discarded modes act as white noise:</p>
 
-    <div class="why-step">
-      <div class="mosaic-frame" data-dock-mosaic data-layout="./static/mosaic/layout.json">
+    <div class="mosaic-step">
+      <div class="mosaic-frame mosaic-frame--kept" style="aspect-ratio: 33 / 8.6"data-dock-mosaic data-layout="./static/mosaic/layout_kept.json?v=04736d12">
         <canvas></canvas>
       </div>
-      <p class="fig-caption has-text-centered">One room has 392 modes below 1&nbsp;kHz; we keep the first 50. Hover to magnify (on a phone, drag a finger across it).</p>
+      <p class="fig-caption has-text-centered">The first 50 modes, the ones we keep. Hover to magnify (on a phone, drag a finger across it).</p>
+    </div>
+
+    <div class="mosaic-step">
+      <div class="mosaic-frame" data-dock-mosaic data-layout="./static/mosaic/layout.json?v=8f404430">
+        <canvas></canvas>
+      </div>
+      <p class="fig-caption has-text-centered">All 392 modes of one room below 1&nbsp;kHz. Only the first 50 are kept.</p>
     </div>
 
     <div class="columns is-vcentered why-step">
