@@ -62,7 +62,8 @@
               </span>
               <!-- Code Link. -->
               <span class="link-block">
-                <a class="external-link button is-normal is-rounded is-dark" disabled>
+                <a href="https://github.com/ugrm/diagonal-regularizer-code"
+                   class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fab fa-github"></i>
                   </span>
@@ -109,7 +110,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Recovering modal amplitudes from a few sensors requires regularization, and the shape of the penalty decides how strongly each mode is shrunk. The best shape depends on the truncation noise that discarded modes add to every measurement, which is unobserved and could be room-specific. We identify a diagonal saturation principle: for a single snapshot, isotropic truncation noise makes the Bayes-optimal Tikhonov shape a closed-form power law Γ<sub>k</sub> ∝ λ<sub>k</sub><sup>|s|</sup>, set by the prior alone and independent of the domain. The off-diagonal anisotropy equals the Herfindahl index H of the discarded-mode power exactly, Weyl's eigenvalue counting law fixes the number of discarded modes and hence H, and Berry's random-wave conjecture enters only through a diagonal term D, which we measure directly. Together they predict an approximately flat loss landscape over the penalty exponent, which leaves a learned diagonal regularizer little to gain from tuning the exponent per room. On simulated acoustic rooms the closed form stays within 5.83% of a per-room power-law oracle across observation windows, and three learned diagonal architectures track its error, the closest within a fraction of a point and none more than 3 pp above it, while learning qualitatively different spectra. Saturation holds for every learned diagonal model tested in the truncation regime: Learned Iterative Ridge, which couples modes across layers, is the only tested method that consistently improves on the closed form. The framework extends to heat diffusion through a known Green's-function correction with no new free parameters.
+            Recovering modal amplitudes from a few sensors requires regularization, and the shape of the penalty decides how strongly each mode is shrunk. The best shape depends on the truncation noise that discarded modes add to every measurement, which is unobserved and could be room-specific. We identify a diagonal saturation principle: for a single snapshot, isotropic truncation noise makes the Bayes-optimal Tikhonov shape a closed-form power law Γ<sub>k</sub> ∝ λ<sub>k</sub><sup>|s|</sup>, set by the prior alone and independent of the domain. The off-diagonal anisotropy equals the Herfindahl index H of the discarded-mode power exactly, Weyl's eigenvalue counting law fixes the number of discarded modes and hence H, and Berry's random-wave conjecture enters only through a diagonal term D, which we measure directly. Together they predict an approximately flat loss landscape over the penalty exponent, which leaves a learned diagonal regularizer little to gain from tuning the exponent per room. On simulated acoustic rooms the closed form stays within 5.83% of a per-room power-law oracle across observation windows, and three learned diagonal architectures track its error, the closest within a fraction of a point and none more than 3 pp above it, while learning qualitatively different spectra. In the truncation regime no tested method consistently improves on the closed form, including Learned Iterative Ridge, which couples modes across layers. The framework extends to heat diffusion through a known Green's-function correction with no new free parameters.
           </p>
         </div>
       </div>
@@ -191,7 +192,7 @@
           <img src="./static/images/fig/05_berry.webp"
                alt="High modes of an irregular room, a rectangle, and a grid, with matching amplitude histograms.">
         </figure>
-        <p class="fig-caption has-text-centered">High modes look like random waves, as Berry predicts. A rectangle's modes don't, yet its landscape is just as flat at the same mode count: the number of modes does most of the work.</p>
+        <p class="fig-caption has-text-centered">Modes of generic rooms look like random waves, as Berry predicts. A rectangle's modes don't, yet with the same number of discarded modes its error landscape is nearly as flat: the mode count, not Berry, does most of the work.</p>
       </div>
       <div class="column is-6">
         <figure class="image">
@@ -219,7 +220,7 @@
                alt="Reconstruction error versus penalty exponent p, nearly flat across observation windows T.">
         </figure>
         <p class="fig-caption has-text-centered">
-          The error is nearly flat in the penalty exponent <em>p</em>. The closed form (<em>p</em>&nbsp;=&nbsp;|<em>s</em>|, red line) sits in that flat basin, costing at most 5.83% in the median room (largest at <em>T</em>&nbsp;=&nbsp;1000).
+          The error is nearly flat in the penalty exponent <em>p</em> (dots mark each window's best <em>p</em>). The closed form (<em>p</em>&nbsp;=&nbsp;|<em>s</em>|, red line) sits in that flat basin: in the median room it costs at most 5.83% more error than the best per-room exponent, largest at <em>T</em>&nbsp;=&nbsp;1000.
         </p>
       </div>
       <div class="column is-6">
